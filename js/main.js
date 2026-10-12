@@ -4,9 +4,19 @@
 
 /* ---------- EDIT YOUR CLINIC DETAILS HERE ---------- */
 const CLINIC = {
-  phone: "",   // e.g. "(818) 123-4567" — leave empty to hide
+  phone: "(323) 660-3722",
   email: "",   // e.g. "info@yourclinic.com" — leave empty to hide
-  address: "Glendale, California", // full street address shows on the site and opens in Google Maps
+  address: "660 W Broadway Suite B, Glendale, CA 91204", // opens in Google Maps
+  // Opening hours, Pacific time (24h "HH:MM"). Use null for closed days.
+  hours: {
+    Monday: ["09:00", "17:00"],
+    Tuesday: ["09:00", "17:00"],
+    Wednesday: ["09:00", "17:00"],
+    Thursday: ["09:00", "17:00"],
+    Friday: ["09:00", "17:00"],
+    Saturday: null,
+    Sunday: null,
+  },
   yelpUrl: "https://www.yelp.com/biz/medical-clinic-for-immunization-glendale-2",
 };
 /* --------------------------------------------------- */
@@ -18,21 +28,58 @@ const CLINIC = {
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
   /* ---------- Clinic details ---------- */
-  const phoneLink = $(".js-phone");
-  if (CLINIC.phone) {
-    phoneLink.href = "tel:" + CLINIC.phone.replace(/[^\d+]/g, "");
-    $(".js-phone-text").textContent = CLINIC.phone;
-  } else phoneLink.remove();
-
   const emailLink = $(".js-email");
   if (CLINIC.email) {
     emailLink.href = "mailto:" + CLINIC.email;
     $(".js-email-text").textContent = CLINIC.email;
   } else emailLink.remove();
 
-  $(".js-address-text").textContent = CLINIC.address;
-  $(".js-map").href = "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent("Medical Clinic for Immunization " + CLINIC.address);
+  $$(".js-address-text").forEach((el) => (el.textContent = CLINIC.address));
+  $$(".js-map").forEach((a) => (a.href = "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent("Medical Clinic for Immunization " + CLINIC.address)));
+  if (CLINIC.phone) {
+    $$(".js-phone-any").forEach((a) => {
+      a.href = "tel:" + CLINIC.phone.replace(/[^\d+]/g, "");
+      $(".js-phone-label", a).textContent = CLINIC.phone;
+    });
+  } else $$(".js-phone-any").forEach((a) => a.remove());
+
+  /* ---------- Hours + live open/closed status (Pacific time) ---------- */
+  const fmt = (hm) => {
+    let [h, m] = hm.split(":").map(Number);
+    const ap = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return h + (m ? ":" + String(m).padStart(2, "0") : "") + " " + ap;
+  };
+  const la = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles", weekday: "long", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(new Date()).reduce((o, p) => ((o[p.type] = p.value), o), {});
+  const today = la.weekday;
+  const nowHM = la.hour + ":" + la.minute;
+  const hoursList = $(".hours-list");
+  Object.entries(CLINIC.hours).forEach(([day, h]) => {
+    const li = document.createElement("li");
+    if (day === today) li.className = "today";
+    li.innerHTML = `<span>${day}</span><span>${h ? fmt(h[0]) + " – " + fmt(h[1]) : "Closed"}</span>`;
+    hoursList.appendChild(li);
+  });
+  const t = CLINIC.hours[today];
+  const open = !!t && nowHM >= t[0] && nowHM < t[1];
+  let note;
+  if (open) note = "Open now · until " + fmt(t[1]);
+  else if (t && nowHM < t[0]) note = "Closed · opens today at " + fmt(t[0]);
+  else {
+    const days = Object.keys(CLINIC.hours);
+    let i = days.indexOf(today);
+    for (let k = 1; k <= 7; k++) {
+      const d = days[(i + k) % 7];
+      if (CLINIC.hours[d]) { note = "Closed · opens " + (k === 1 ? "tomorrow" : d) + " at " + fmt(CLINIC.hours[d][0]); break; }
+    }
+  }
+  $$(".js-open-status").forEach((el) => {
+    el.classList.toggle("is-open", open);
+    $(".js-open-text", el).textContent = note || "Closed";
+  });
   $$(".js-yelp, .js-yelp-read").forEach((a) => (a.href = CLINIC.yelpUrl));
   $(".js-year").textContent = new Date().getFullYear();
 

@@ -31,6 +31,7 @@
       <a href="#tv-testing">TV &amp; Production</a>
       <a href="#process">Process</a>
       <a href="#reviews">Reviews</a>
+      <a href="#" class="nav-phone js-phone-any"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/></svg><span class="js-phone-label"></span></a>
       <a href="#contact" class="btn btn-sm btn-dark magnetic">Book a Visit</a>
     </nav>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
@@ -42,6 +43,7 @@
     <a href="#process">Process</a>
     <a href="#reviews">Reviews</a>
     <a href="#contact">Book a Visit</a>
+    <a href="#" class="mobile-call js-phone-any">Call <span class="js-phone-label"></span></a>
   </div>
 
   <main>
@@ -55,7 +57,7 @@
       </div>
 
       <div class="container hero-inner">
-        <p class="eyebrow reveal" data-delay="0"><span class="dot"></span> Glendale, California</p>
+        <p class="eyebrow reveal" data-delay="0"><span class="dot"></span> Glendale, California <span class="status-pill js-open-status"><span class="js-open-text">Mon–Fri · 9 AM–5 PM</span></span></p>
         <h1 class="hero-title split">
           Protection for life.<br />
           <em>Clearance</em> for the camera.
@@ -351,16 +353,23 @@
           <p class="section-lead reveal" data-delay="200">
             Individuals, families, employers and production teams — reach out and we'll take care of the rest.
           </p>
+          <div class="hours-card reveal" data-delay="300">
+            <div class="hours-head">
+              <h3>Hours</h3>
+              <span class="status-pill js-open-status"><span class="js-open-text">Mon–Fri · 9 AM–5 PM</span></span>
+            </div>
+            <ul class="hours-list"></ul>
+          </div>
         </div>
         <div class="contact-list">
-          <a class="contact-item reveal js-phone" data-delay="0" href="#">
-            <small>Call</small><span class="js-phone-text">Phone</span><span class="arrow">→</span>
+          <a class="contact-item reveal js-phone-any" data-delay="0" href="#">
+            <small>Call</small><span class="js-phone-label">Phone</span><span class="arrow">→</span>
           </a>
           <a class="contact-item reveal js-email" data-delay="100" href="#">
             <small>Email</small><span class="js-email-text">Email</span><span class="arrow">→</span>
           </a>
           <a class="contact-item reveal js-map" data-delay="200" href="#" target="_blank" rel="noopener">
-            <small>Visit</small><span class="js-address-text">Glendale, California</span><span class="arrow">↗</span>
+            <small>Visit</small><span class="js-address-text">660 W Broadway Suite B, Glendale, CA 91204</span><span class="arrow">↗</span>
           </a>
           <a class="contact-item reveal" data-delay="300" href="https://www.yelp.com/biz/medical-clinic-for-immunization-glendale-2" target="_blank" rel="noopener">
             <small>Yelp</small><span>See hours, photos &amp; reviews</span><span class="arrow">↗</span>
@@ -376,7 +385,10 @@
         <span class="big-word">Immunize.<em> Clear.</em> Go.</span>
       </div>
       <div class="footer-meta">
-        <span>© <span class="js-year"></span> Medical Clinic for Immunization · Glendale, CA</span>
+        <span>© <span class="js-year"></span> Medical Clinic for Immunization</span>
+        <a href="#" class="js-map" target="_blank" rel="noopener"><span class="js-address-text"></span></a>
+        <a href="#" class="js-phone-any"><span class="js-phone-label"></span></a>
+        <span>Mon–Fri 9 AM–5 PM</span>
         <span class="muted">Show names are trademarks of their respective owners and are listed to describe testing services provided.</span>
         <a href="#top" class="to-top">Back to top ↑</a>
       </div>

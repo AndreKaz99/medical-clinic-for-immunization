@@ -19,14 +19,17 @@ Open `js/main.js`. The `CLINIC` object at the top holds your details:
 
 ```js
 const CLINIC = {
-  phone: "",   // e.g. "(818) 123-4567"
+  phone: "(323) 660-3722",
   email: "",   // e.g. "info@yourclinic.com"
-  address: "Glendale, California",
+  address: "660 W Broadway Suite B, Glendale, CA 91204",
+  hours: { Monday: ["09:00", "17:00"], /* … */ Saturday: null, Sunday: null },
   yelpUrl: "https://www.yelp.com/biz/medical-clinic-for-immunization-glendale-2",
 };
 ```
 
-If you leave phone or email empty, those rows are hidden. The address row opens Google Maps.
+If you leave phone or email empty, those links are hidden. The address opens Google Maps. Hours use 24-hour Pacific time (`null` = closed) and drive the hours table plus the live "Open now / Closed" badge.
+
+The short "Mon–Fri 9 AM–5 PM" text in `index.html` (footer, and the badge fallback) is plain text; update it there too if your hours change.
 
 ## Preview locally
 
