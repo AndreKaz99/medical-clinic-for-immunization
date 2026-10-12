@@ -246,6 +246,25 @@ const CLINIC = {
       ticking = true;
     }
   }, { passive: true });
+  // End the timeline line at the center of the last circle
+  const lastStep = $(".step:last-child");
+  const setTail = () => {
+    const vertical = window.matchMedia("(max-width: 860px)").matches;
+    const tail = vertical
+      ? steps.clientHeight - (lastStep.offsetTop + 28)
+      : steps.clientWidth - (lastStep.offsetLeft + 28);
+    steps.style.setProperty("--tail", Math.max(tail, 0) + "px");
+  };
+  setTail();
+  // Fade the line in only after every circle has finished its entrance
+  const lineIO = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    lineIO.disconnect();
+    setTimeout(() => steps.classList.add("lined"), reduceMotion ? 0 : 1500);
+  }, { threshold: 0.4 });
+  lineIO.observe(steps);
+  window.addEventListener("resize", setTail);
+  if (document.fonts) document.fonts.ready.then(setTail);
   window.addEventListener("resize", onScroll);
   onScroll();
 
