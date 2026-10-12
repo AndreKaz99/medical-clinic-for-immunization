@@ -111,7 +111,7 @@ p { margin: 0; }
 }
 .reveal.in { opacity: 1; transform: none; }
 
-.split .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.split .word { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.15em 0.08em; margin: 0 -0.15em -0.08em; }
 .split .word > span {
   display: inline-block; transform: translateY(110%) rotate(4deg);
   transition: transform 1.1s var(--ease); transition-delay: var(--d, 0ms);
