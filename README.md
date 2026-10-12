@@ -29,8 +29,21 @@ const CLINIC = {
 
 If you leave phone or email empty, those links are hidden. The address opens Google Maps. Hours use 24-hour Pacific time (`null` = closed) and drive the hours table plus the live "Open now / Closed" badge.
 
-The short "Mon–Fri 9 AM–5 PM" text in `index.html` (footer, and the badge fallback) is plain text; update it there too if your hours change.
+The short "Mon to Fri, 9 AM to 5 PM" text in `index.html` (footer, and the badge fallback) is plain text; update it there too if your hours change. The phone number and address are also written into `index.html` so they show even if JavaScript is off.
 
 ## Preview locally
 
 Open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
+
+## Accessibility
+
+The site targets **WCAG 2.1 / 2.2 Level AA**, the standard generally used for ADA website compliance. It has been tested with [axe-core](https://github.com/dequelabs/axe-core) (0 violations), keyboard-only navigation, a 320px-wide screen, and with JavaScript turned off. Features include:
+
+- Skip link, landmarks, logical headings, visible keyboard focus outlines
+- AA color contrast for all text (deeper teal `--accent-ink` / `--accent-ink-lg` on light backgrounds)
+- "Pause motion" button for all looping animation, and reduced motion for visitors who request it in their device settings
+- Screen reader announcements for vaccine filters and the star rating; links that open a new tab say so
+- Mobile menu traps focus while open and closes with Escape
+- Content stays fully visible without JavaScript
+
+When editing: keep teal text on light backgrounds using `var(--accent-ink)` (small text) or `var(--accent-ink-lg)` (large headings), and run an automated checker such as axe DevTools or Lighthouse after changes. Automated tools can't catch everything, so for formal ADA assurance consider a manual audit with a screen reader (VoiceOver or NVDA).

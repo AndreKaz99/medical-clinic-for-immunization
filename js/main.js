@@ -1,11 +1,11 @@
 /* =========================================================
-   Medical Clinic for Immunization — interactions
+   Medical Clinic for Immunization: interactions
    ========================================================= */
 
 /* ---------- EDIT YOUR CLINIC DETAILS HERE ---------- */
 const CLINIC = {
   phone: "(323) 660-3722",
-  email: "",   // e.g. "info@yourclinic.com" — leave empty to hide
+  email: "",   // e.g. "info@yourclinic.com" (leave empty to hide)
   address: "660 W Broadway Suite B, Glendale, CA 91204", // opens in Google Maps
   // Opening hours, Pacific time (24h "HH:MM"). Use null for closed days.
   hours: {
@@ -30,6 +30,7 @@ const CLINIC = {
   /* ---------- Clinic details ---------- */
   const emailLink = $(".js-email");
   if (CLINIC.email) {
+    emailLink.hidden = false;
     emailLink.href = "mailto:" + CLINIC.email;
     $(".js-email-text").textContent = CLINIC.email;
   } else emailLink.remove();
@@ -60,7 +61,7 @@ const CLINIC = {
   Object.entries(CLINIC.hours).forEach(([day, h]) => {
     const li = document.createElement("li");
     if (day === today) li.className = "today";
-    li.innerHTML = `<span>${day}</span><span>${h ? fmt(h[0]) + " – " + fmt(h[1]) : "Closed"}</span>`;
+    li.innerHTML = `<span>${day}</span><span>${h ? fmt(h[0]) + " to " + fmt(h[1]) : "Closed"}</span>`;
     hoursList.appendChild(li);
   });
   const t = CLINIC.hours[today];
@@ -130,7 +131,19 @@ const CLINIC = {
     },
     { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
   );
-  $$(".reveal, .split, .stack-card").forEach((el) => io.observe(el));
+  const revealables = $$(".reveal, .split, .stack-card");
+  revealables.forEach((el) => io.observe(el));
+  // Backup for fast scrolls / anchor jumps that skip past an element between observer checks
+  let pendingReveal = revealables;
+  const revealPassed = () => {
+    if (!pendingReveal.length) return;
+    const limit = window.innerHeight;
+    pendingReveal = pendingReveal.filter((el) => {
+      if (el.classList.contains("in")) return false;
+      if (el.getBoundingClientRect().top < limit) { el.classList.add("in"); io.unobserve(el); return false; }
+      return true;
+    });
+  };
 
   // Hero animates immediately
   requestAnimationFrame(() => $(".hero-title").classList.add("in"));
@@ -154,7 +167,28 @@ const CLINIC = {
       counterIO.unobserve(el);
     });
   }, { threshold: 0.6 });
-  $$("[data-count]").forEach((el) => counterIO.observe(el));
+  $$("[data-count]").forEach((el) => {
+    // Screen readers get the final number, not the animation frames
+    el.setAttribute("aria-hidden", "true");
+    const sr = document.createElement("span");
+    sr.className = "sr-only";
+    sr.textContent = el.dataset.count + (el.dataset.suffix || "");
+    el.after(sr);
+    counterIO.observe(el);
+  });
+
+  /* ---------- Pause / play looping motion ---------- */
+  const motionBtn = $(".motion-toggle");
+  const setMotion = (paused) => {
+    document.documentElement.classList.toggle("motion-paused", paused);
+    motionBtn.setAttribute("aria-pressed", paused);
+    $(".mt-text", motionBtn).textContent = paused ? "Play motion" : "Pause motion";
+    try { localStorage.setItem("motionPaused", paused ? "1" : "0"); } catch (e) {}
+  };
+  let saved = null;
+  try { saved = localStorage.getItem("motionPaused"); } catch (e) {}
+  if (saved === "1") setMotion(true);
+  motionBtn.addEventListener("click", () => setMotion(!document.documentElement.classList.contains("motion-paused")));
 
   /* ---------- Scroll-driven effects ---------- */
   const nav = $(".nav");
@@ -163,7 +197,6 @@ const CLINIC = {
   const parallax = $$("[data-parallax]");
   const stackCards = $$(".stack-card");
   stackCards.forEach((c, i) => c.style.setProperty("--i", i));
-  const stepsLine = $(".steps-line");
   const steps = $(".steps");
   let lastY = window.scrollY;
   let ticking = false;
@@ -176,7 +209,7 @@ const CLINIC = {
     bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
     nav.classList.toggle("scrolled", y > 30);
     if (!document.body.classList.contains("menu-open")) {
-      nav.classList.toggle("hidden", y > lastY && y > 400);
+      nav.classList.toggle("hidden", y > lastY && y > 400 && !nav.contains(document.activeElement));
     }
     fab.classList.toggle("show", y > vh * 0.8);
 
@@ -200,8 +233,9 @@ const CLINIC = {
     // Process line progress
     const sr = steps.getBoundingClientRect();
     const p = Math.min(Math.max((vh * 0.75 - sr.top) / sr.height, 0), 1);
-    stepsLine.style.setProperty("--p", p);
+    steps.style.setProperty("--p", p);
 
+    revealPassed();
     lastY = y;
     ticking = false;
   };
@@ -221,25 +255,38 @@ const CLINIC = {
     document.body.classList.toggle("menu-open", open);
     toggle.setAttribute("aria-expanded", open);
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    menu.setAttribute("aria-hidden", !open);
+    menu.inert = !open;
+    // Keep keyboard and screen reader focus inside the open menu
+    [$("main"), $(".footer"), $(".yelp-fab"), $(".skip-link")].forEach((el) => el && (el.inert = open));
     nav.classList.remove("hidden");
+    if (open) setTimeout(() => $("a", menu).focus(), 150);
   };
   toggle.addEventListener("click", () => setMenu(!document.body.classList.contains("menu-open")));
   $$("a", menu).forEach((a) => a.addEventListener("click", () => setMenu(false)));
-  document.addEventListener("keydown", (e) => e.key === "Escape" && setMenu(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && document.body.classList.contains("menu-open")) {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+  window.matchMedia("(min-width: 861px)").addEventListener("change", (m) => m.matches && setMenu(false));
 
   /* ---------- Vaccine filters ---------- */
   $$(".chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       $$(".chip").forEach((c) => {
         c.classList.toggle("active", c === chip);
-        c.setAttribute("aria-selected", c === chip);
+        c.setAttribute("aria-pressed", c === chip);
       });
       const f = chip.dataset.filter;
+      let shown = 0;
       $$(".vax-card").forEach((card) => {
         const match = f === "all" || card.dataset.cat.split(" ").includes(f);
         card.classList.toggle("filtered-out", !match);
+        card.inert = !match; // dimmed cards are skipped by keyboard & screen readers
+        if (match && !card.classList.contains("vax-more")) shown++;
       });
+      $("#vax-status").textContent = `Showing ${shown} ${chip.textContent.trim()} vaccines`;
     });
   });
 
@@ -248,8 +295,8 @@ const CLINIC = {
   const msg = $(".star-msg");
   const messages = {
     0: "Tap a star to start",
-    1: "We're sorry — tell us how we can do better.",
-    2: "Thanks — your feedback helps us improve.",
+    1: "We're sorry. Tell us how we can do better.",
+    2: "Thanks. Your feedback helps us improve.",
     3: "Thank you! Share your thoughts on Yelp.",
     4: "Wonderful! We'd love to hear more on Yelp.",
     5: "You made our day! Share the love on Yelp ✦",
@@ -263,6 +310,7 @@ const CLINIC = {
     s.addEventListener("click", () => {
       rating = v;
       paint(v);
+      stars.forEach((st) => st.setAttribute("aria-pressed", +st.dataset.v === v));
       msg.textContent = messages[v] + " Opening Yelp…";
       stars.slice(0, v).forEach((st, i) => {
         st.classList.remove("pop");
