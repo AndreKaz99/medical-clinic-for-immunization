@@ -409,13 +409,17 @@ p { margin: 0; }
 /* ---------- PROCESS ---------- */
 .process { padding-top: clamp(90px, 12vw, 160px); padding-bottom: clamp(90px, 12vw, 160px); }
 .steps { position: relative; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.steps::before, .steps::after { content: ""; position: absolute; top: 28px; left: 28px; right: var(--tail, 28px); height: 1px; background: var(--line); z-index: 0; }
-.steps::after { background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform: scaleX(var(--p, 0)); transform-origin: left; }
-.js .steps::before, .js .steps::after { opacity: 0; transition: opacity 0.6s var(--ease); }
-.js .steps.lined::before, .js .steps.lined::after { opacity: 1; } /* line appears once the circles are solid */
-.step { position: relative; z-index: 1; } /* steps (and their circles) always sit above the line */
+.step { position: relative; }
+/* Connector segments run from the edge of one circle to the edge of the next, so they never cross a circle */
+.step:not(:last-child)::after {
+  content: ""; position: absolute; top: 28px; left: 64px; width: calc(100% + 32px - 72px); height: 1px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform-origin: left; transition: transform 0.9s var(--ease);
+}
+.step:nth-child(2)::after { transition-delay: 0.35s; }
+.js .step:not(:last-child)::after { transform: scaleX(0); }
+.js .steps.lined .step:not(:last-child)::after { transform: none; } /* draws in once the circles are solid */
 .step-num {
-  position: relative; z-index: 1; /* circles sit on top of the timeline line */
   display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
   background: var(--surface); border: 1px solid var(--line); font-family: var(--serif); font-size: 1.5rem;
   margin-bottom: 1.5rem; transition: background 0.5s, color 0.5s, transform 0.6s var(--ease-spring);
@@ -538,10 +542,13 @@ p { margin: 0; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .stat { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
   .steps { grid-template-columns: 1fr; gap: 40px; }
-  .steps::before, .steps::after { top: 28px; bottom: var(--tail, 28px); left: 28px; right: auto; width: 1px; height: auto; }
-  .steps::after { background: linear-gradient(180deg, var(--accent), var(--accent-2)); transform: scaleY(var(--p, 0)); transform-origin: top; }
+  .step:not(:last-child)::after {
+    top: 64px; left: 28px; width: 1px; height: calc(100% + 40px - 72px);
+    background: linear-gradient(180deg, var(--accent), var(--accent-2)); transform-origin: top;
+  }
+  .js .step:not(:last-child)::after { transform: scaleY(0); }
   .step { padding-left: 80px; }
-  .step-num { position: absolute; left: 0; top: 0; z-index: 1; }
+  .step-num { position: absolute; left: 0; top: 0; }
   .stack-card { grid-template-columns: 1fr; min-height: 0; top: calc(80px + var(--i, 0) * 12px); }
   .stack-visual { display: none; }
   .show-list li { flex-direction: column; gap: 0.25rem; }

@@ -31,6 +31,10 @@ If you leave phone or email empty, those links are hidden. The address opens Goo
 
 The short "Mon to Fri, 9 AM to 5 PM" text in `index.html` (footer, and the badge fallback) is plain text; update it there too if your hours change. The phone number and address are also written into `index.html` so they show even if JavaScript is off.
 
+## After editing CSS or JS
+
+`index.html` loads `css/styles.css?v=...` and `js/main.js?v=...`. Bump that `v=` value whenever you change those files so visitors' browsers fetch the new version instead of a cached copy.
+
 ## Preview locally
 
 Open `index.html` in a browser, or run `python3 -m http.server` in this folder and visit http://localhost:8000.
