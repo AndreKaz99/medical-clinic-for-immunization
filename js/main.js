@@ -81,7 +81,8 @@ const CLINIC = {
     el.classList.toggle("is-open", open);
     $(".js-open-text", el).textContent = note || "Closed";
   });
-  $$(".js-yelp, .js-yelp-read").forEach((a) => (a.href = CLINIC.yelpUrl));
+  $$(".js-yelp").forEach((a) => (a.href = CLINIC.yelpUrl));
+  $$(".js-yelp-read").forEach((a) => (a.href = CLINIC.yelpUrl + "#reviews"));
   $(".js-year").textContent = new Date().getFullYear();
 
   /* ---------- Split headings into words ---------- */

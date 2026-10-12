@@ -265,7 +265,8 @@ p { margin: 0; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-track span { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3.2rem); white-space: nowrap; color: var(--ink); transition: color 0.3s; }
 .marquee-track span:hover { color: var(--accent-ink-lg); }
-.marquee-track i { font-style: normal; color: var(--accent); font-size: 1.2rem; }
+.marquee-track i { display: block; flex: none; width: 1.1rem; height: 1.1rem; }
+.marquee-track i svg { width: 100%; height: 100%; fill: var(--accent); }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* Pause / play control for looping motion (WCAG 2.2.2) */
@@ -336,6 +337,7 @@ p { margin: 0; }
 .vax-card > * { position: relative; }
 .vax-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
 .vax-tag { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); padding: 0.35em 0.8em; border-radius: 999px; }
+.vax-abbr::before { content: attr(data-abbr); }
 .vax-abbr { font-family: var(--serif); font-size: 2.2rem; line-height: 1; color: rgba(11, 27, 43, 0.15); transition: color 0.5s, transform 0.6s var(--ease-spring); }
 .vax-card:hover .vax-abbr { color: var(--accent); transform: scale(1.1) rotate(-4deg); }
 .vax-card h3 { font-size: 1.5rem; }
@@ -368,7 +370,7 @@ p { margin: 0; }
   position: sticky; top: calc(100px + var(--i, 0) * 18px);
   display: grid; grid-template-columns: auto 1fr auto; gap: clamp(20px, 4vw, 56px); align-items: center;
   min-height: 340px; padding: clamp(28px, 4vw, 56px);
-  background: linear-gradient(160deg, #163049, #0f2235); border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12283d linear-gradient(160deg, #163049, #0f2235); border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius); box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, 0.5);
   transform-origin: 50% 0; will-change: transform;
 }
@@ -431,11 +433,14 @@ p { margin: 0; }
 .yelp-badge strong { color: var(--yelp); }
 .stars { display: flex; justify-content: center; gap: 6px; margin: 1.5rem 0 0.5rem; }
 .star {
-  font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; color: #ebe9e3;
-  -webkit-text-stroke: 1px #8f8b82; /* 3:1 outline so empty stars stay perceivable */
-  transition: color 0.25s, transform 0.4s var(--ease-spring), -webkit-text-stroke-color 0.25s;
+  font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1; padding: 0.04em;
+  transition: transform 0.4s var(--ease-spring);
 }
-.star.on { color: var(--yelp); -webkit-text-stroke-color: var(--yelp); }
+.star svg {
+  width: 1em; height: 1em; fill: #ebe9e3; stroke: #8f8b82; stroke-width: 1; stroke-linejoin: round; /* 3:1 outline */
+  transition: fill 0.25s, stroke 0.25s;
+}
+.star.on svg { fill: var(--yelp); stroke: var(--yelp); }
 .star:hover { transform: scale(1.2) rotate(-8deg); }
 .star.pop { animation: pop 0.6s var(--ease-spring); }
 @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.45) rotate(10deg); } 100% { transform: scale(1); } }
@@ -444,7 +449,7 @@ p { margin: 0; }
 
 /* ---------- CONTACT ---------- */
 .contact {
-  background: linear-gradient(135deg, #0e2a3a, var(--dark)); color: #fff; padding: clamp(90px, 12vw, 160px) 0;
+  background: var(--dark) linear-gradient(135deg, #0e2a3a, var(--dark)); color: #fff; padding: clamp(90px, 12vw, 160px) 0;
   border-radius: clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px) 0 0;
 }
 .contact .section-lead { color: rgba(255, 255, 255, 0.7); margin-top: 1.5rem; }
