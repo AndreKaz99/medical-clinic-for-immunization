@@ -99,7 +99,7 @@ p { margin: 0; }
 
 /* ---------- Eyebrow / headings ---------- */
 .eyebrow {
-  display: inline-flex; align-items: center; gap: 0.6em;
+  display: inline-flex; flex-wrap: wrap; row-gap: 0.75em; align-items: center; gap: 0.6em;
   font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ink-2); margin-bottom: 1.25rem;
 }
@@ -476,7 +476,8 @@ p { margin: 0; }
 
 /* ---------- Hours / status ---------- */
 .status-pill {
-  display: inline-flex; align-items: center; gap: 0.5em; margin-left: 0.6em; padding: 0.35em 0.85em; border-radius: 999px;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 0.5em; padding: 0.35em 0.85em; border-radius: 999px;
   font-size: 0.72rem; letter-spacing: 0.06em; text-transform: none; font-weight: 600;
   background: rgba(11, 27, 43, 0.06); color: var(--ink-2);
 }
@@ -514,16 +515,25 @@ p { margin: 0; }
 .footer-meta .muted { flex-basis: 100%; order: 3; font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); }
 .to-top:hover { color: #fff; }
 
-/* ---------- Yelp floating button ---------- */
+/* ---------- Floating action dock (call + Yelp) ---------- */
+.fab-dock {
+  position: fixed; right: 20px; bottom: 20px; z-index: 40; display: flex; align-items: center; gap: 10px;
+  transform: translateY(120px); transition: transform 0.6s var(--ease-spring);
+}
+.fab-dock.show { transform: none; }
 .yelp-fab {
-  position: fixed; right: 20px; bottom: 20px; z-index: 40;
   display: flex; align-items: center; gap: 8px; padding: 12px 18px 12px 14px; border-radius: 999px;
   background: var(--yelp); color: #fff; font-weight: 600; font-size: 0.9rem;
-  box-shadow: 0 14px 34px -10px rgba(211, 35, 35, 0.65);
-  transform: translateY(120px); transition: transform 0.6s var(--ease-spring), box-shadow 0.4s;
+  box-shadow: 0 14px 34px -10px rgba(211, 35, 35, 0.65); transition: box-shadow 0.4s;
 }
-.yelp-fab.show { transform: none; }
 .yelp-fab:hover { box-shadow: 0 18px 40px -8px rgba(211, 35, 35, 0.8); }
+.call-fab {
+  display: none; align-items: center; justify-content: center; gap: 10px; padding: 13px 20px; border-radius: 999px;
+  background: var(--ink); color: #fff; font-weight: 600; font-size: 0.95rem; white-space: nowrap;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 14px 34px -10px rgba(11, 27, 43, 0.6); /* outline keeps it visible on dark sections */
+}
+.call-fab svg { width: 17px; height: 17px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.call-fab:focus-visible { border-radius: 999px; outline-color: var(--accent-ink); }
 .fab-star { display: inline-block; font-size: 1.1rem; animation: spin 6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -537,6 +547,12 @@ p { margin: 0; }
   .nav-links { display: none; }
   .nav-toggle { display: block; }
   .split-head, .reviews-inner, .contact-inner { grid-template-columns: minmax(0, 1fr); }
+  .fab-dock {
+    left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: none; /* always visible on phones */
+  }
+  .call-fab { display: flex; flex: 1 1 auto; }
+  .footer { padding-bottom: 110px; } /* room so the dock never covers footer text */
   .pillar-grid { grid-template-columns: 1fr; }
   .pillar { min-height: 320px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
@@ -559,14 +575,17 @@ p { margin: 0; }
   .brand-text em { font-size: 0.92rem; }
   .contact-item { grid-template-columns: 1fr auto; }
   .contact-item small { grid-column: 1 / -1; }
-  .fab-text { display: none; }
   .marquee-section { display: flex; flex-direction: column; }
   .motion-toggle { position: static; order: 3; align-self: center; margin-top: 24px; }
-  .yelp-fab { padding: 14px; }
   .hero-ctas .btn { flex: 1 1 auto; justify-content: center; }
   .btn { white-space: normal; text-align: center; }
   .review-card { padding: 24px 18px; }
   .stars { gap: 2px; }
+}
+
+@media (max-width: 380px) {
+  .fab-text { display: none; }
+  .yelp-fab { padding: 14px; }
 }
 
 /* ---------- Reduced motion ---------- */

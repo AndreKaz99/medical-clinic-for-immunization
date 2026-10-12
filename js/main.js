@@ -194,7 +194,7 @@ const CLINIC = {
   /* ---------- Scroll-driven effects ---------- */
   const nav = $(".nav");
   const bar = $(".progress span");
-  const fab = $(".yelp-fab");
+  const fab = $(".fab-dock");
   const parallax = $$("[data-parallax]");
   const stackCards = $$(".stack-card");
   stackCards.forEach((c, i) => c.style.setProperty("--i", i));
@@ -260,7 +260,7 @@ const CLINIC = {
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     menu.inert = !open;
     // Keep keyboard and screen reader focus inside the open menu
-    [$("main"), $(".footer"), $(".yelp-fab"), $(".skip-link")].forEach((el) => el && (el.inert = open));
+    [$("main"), $(".footer"), $(".fab-dock"), $(".skip-link")].forEach((el) => el && (el.inert = open));
     nav.classList.remove("hidden");
     if (open) setTimeout(() => $("a", menu).focus(), 150);
   };
