@@ -398,7 +398,7 @@ p { margin: 0; }
   transform: scaleY(0); transform-origin: bottom; transition: transform 0.6s var(--ease); z-index: 0;
 }
 .show-list li > * { position: relative; z-index: 1; transition: transform 0.6s var(--ease), color 0.4s; }
-.show-list span { font-size: clamp(1.8rem, 5vw, 4rem); letter-spacing: -0.03em; font-weight: 500; }
+.show-list span { font-size: clamp(1.8rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
 .show-list small { color: rgba(255, 255, 255, 0.62); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; }
 @media (hover: hover) {
   .show-list li:hover::before { transform: scaleY(1); }

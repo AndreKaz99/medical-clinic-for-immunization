@@ -3,7 +3,7 @@
 A static website (plain HTML, CSS and JavaScript, no build step) for **Medical Clinic for Immunization** in Glendale, CA. It covers:
 
 - **Immunizations**: Tdap, Tetanus, Hep A, Hep B, MMR, Yellow Fever, Flu, Typhoid & more, with filter chips
-- **Testing for TV Shows**: STD testing, drug testing, EKGs, physicals & more, plus the shows served (The Bachelor, American Ninja Warrior, Hell's Kitchen, The Challenge, Naked and Afraid…)
+- **Testing for TV Shows**: STD testing, drug testing, EKGs, physicals & more, plus the shows served (The Bachelor, American Ninja Warrior, Hell's Kitchen, The Challenge, Naked and Afraid, So You Think You Can Dance…)
 - **Yelp reviews**: a star picker and a floating "Review us" button that open the clinic's Yelp page
 
 ## Publish on GitHub Pages (free, github.io URL)
